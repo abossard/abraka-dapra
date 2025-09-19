@@ -43,9 +43,16 @@ Kitchen-Sink Fever Dream
 3. Answer Agent drafts a menu, Evaluator grades spice puns, and the Workflow pauses on a `humanApproval` task so an on-call teammate can veto the haunted gelatin idea.
 4. If the human laughs and approves, the Workflow resumes, files telemetry, publishes a celebration event, and the Memory Agent distills the chaos into a polite summary.
 
+Workflow Patterns in Play
+-------------------------
+- **Fan-out/Fan-in enrichment** (Dapr workflow patterns): context agents run in parallel branches, rejoin to form the snack dossier before drafting the answer.
+- **Human interaction (external event)**: the workflow waits on `humanApproval`, matching Dapr’s external event pattern so people can bless or block risky suggestions.
+- **Compensation mini-saga**: if safety spikes or humans reject the platter, compensating activities rewind memory updates, emit caution metrics, and surface a polite fallback menu.
+
 Learn More Without a Crystal Ball
 ---------------------------------
 - Agents overview: https://docs.dapr.io/developing-applications/dapr-agents/
+- Workflow patterns: https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-patterns/
 - Workflow concepts: https://docs.dapr.io/developing-applications/building-blocks/workflow/
 - Sample manifests & prompts will land once TODOs below start clearing.
 
