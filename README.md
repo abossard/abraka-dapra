@@ -9,6 +9,32 @@ Core Ingredients
 - `Dapr Workflows`: deterministic backbone for fan-out enrichment, confidence scoring, retries, and replay-safe pruning. Durable state keeps every user on their own rails.
 - Shared state & secrets stay in Dapr component config so the app code can focus on prompts, scoring, and memory rules.
 
+Mermaid Snapshot
+----------------
+```mermaid
+flowchart TD
+    User((Hungry Human)) -->|ask| DurableAgent[Durable User Agent]
+    DurableAgent -->|fan-out| EnrichmentFork{Parallel Enrichment}
+    EnrichmentFork --> Hist[History Agent]
+    EnrichmentFork --> Prof[Profile Agent]
+    EnrichmentFork --> Safe[Safety Agent]
+    EnrichmentFork --> Embed[Embedding Agent]
+    Hist --> Context
+    Prof --> Context
+    Safe --> Context
+    Embed --> Context
+    Context --> AnswerAgent[Answer Agent]
+    AnswerAgent --> Eval[Evaluator]
+    Eval -->|needs spice| Refinement[Draft Update]
+    Refinement --> AnswerAgent
+    Eval -->|looks solid| HumanPause{humanApproval Task}
+    HumanPause -->|approve| WorkflowResume[Workflow resumes]
+    HumanPause -->|reject| RewritePrompt[New prompt guidance]
+    WorkflowResume --> Memory[Durable Memory]
+    WorkflowResume --> Telemetry[Event + Metrics]
+    Memory --> DurableAgent
+```
+
 Kitchen-Sink Fever Dream
 ------------------------
 "Operation Snacktopus" tries every trick at once:
