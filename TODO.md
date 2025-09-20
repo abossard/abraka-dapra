@@ -5,30 +5,30 @@ Legend: [ ] todo · [x] done · Tags: PY / AGENT / WF / API / STATE / OBS / TEST
 
 Environment & Components
 ------------------------
-- [ ] (PY, OPS) Standardize on Python 3.13.7 (latest stable per python.org) and manage deps with `uv`; initialize `pyproject.toml` using official Dapr Python SDKs (`dapr`, `dapr-ext-workflow`, `dapr-agents`) plus Ruff + Pytest, and add `Makefile` targets (`make dev`, `make test`, `make run-agent`, `make run-workflow`).
-- [ ] (OPS) Create `components/` with Redis state store, Redis pubsub, Ollama conversation connector, optional local secret store; include scoped manifests for `agent-shell` + `workflow-host`.
-- [ ] (OPS) Author `.env.example` capturing Dapr/Ollama ports, model name, approval thresholds, and compensation toggles.
+- [ ] (PY, OPS) Standardize on Python 3.13.7 and manage deps with `uv`; initialize `pyproject.toml` using official Dapr Python SDKs (`dapr`, `dapr-ext-workflow`, `dapr-agents`) plus Ruff + Pytest, and add `Makefile` targets (`make dev`, `make test`, `make run-agent`, `make run-workflow`).
+- [ ] (OPS) Create `components/` with Redis state store, Redis pubsub, Ollama conversation connector, optional local secret store; include scoped manifests for `agent-shell` + `workflow-host` and post-serve consumers.
+- [ ] (OPS) Author `.env.example` capturing ports, model name, saga timeouts, supply flags, and compensation toggles.
 
 Agent Service (`agent-shell`)
 ----------------------------
-- [ ] (AGENT, PY) Build FastAPI service using the Dapr Agents SDK (`dapr-agents`) for Durable User Agent orchestration; expose `/ask`, `/history`, `/profile`, `/safety`, `/human/decision`, wiring tools, evaluator heuristics, and structured logging through the SDK abstractions.
-- [ ] (STATE, AGENT) Implement session memory helpers (Pydantic models for Question, Answer, MemoryEntry) and summarizer/pruner logic persisting via the Dapr state store client from the Python SDK.
-- [ ] (OBS, API) Emit per-call telemetry leveraging Dapr SDK hooks (sidecar tracing context, pubsub via Dapr client) for Zipkin spans, metrics, and safety/evaluator flags.
+- [ ] (AGENT, PY) Build FastAPI service using the Dapr Agents SDK for Durable User Agent orchestration; expose `/ask`, `/history`, `/profile`, `/safety`, `/human/decision`, wiring tools (safety, supply, ops), evaluator heuristics, and structured logging.
+- [ ] (STATE, AGENT) Implement session memory helpers (Pydantic models for Question, Answer, MemoryEntry) and summarizer/pruner logic persisting via the Dapr state store client.
+- [ ] (OBS, API) Emit per-call telemetry leveraging Dapr SDK hooks (tracing context, pubsub via Dapr client) for Zipkin spans, saga flags, and compensation signals.
 
 Workflow Host (`workflow-host`)
 -------------------------------
-- [ ] (WF, PY) Implement `snacktopus` workflow with explicit Dapr patterns: fan-out/fan-in enrichment branches, agent invocation via service invocation, external `humanApproval` wait using the workflow event pattern, and compensating activities for rejected or unsafe outcomes.
-- [ ] (WF, STATE) Persist workflow run metadata using Dapr state store SDK APIs and publish completion/compensation events to Redis pubsub via the Dapr client.
-- [ ] (WF, AGENT) Provide CLI/utility (Python) that raises approval events through the Dapr Workflow client, supporting accept/reject/timeout flows and triggering compensation when needed.
+- [ ] (WF, PY) Implement the kitchen-sink `snacktopus` workflow: fan-out enrichment activities, `call_answer_agent` invocation, saga manager waiting on event-driven human/ops/supply approvals, pre-serve check fan-out, compensation handlers (safety/human/ops/supply), and post-serve event fan-out + timers.
+- [ ] (STATE, WF) Implement saga state & compensation ledger utilities (persist saga snapshots, track mutations for rollback) using the Dapr state store SDK.
+- [ ] (WF, AGENT) Provide CLI/utility that raises `sagaEvent` approvals and orchestrates post-serve tasks via the Dapr Workflow client.
 
 Testing & Load
 --------------
-- [ ] (TEST) Add `pytest` suite exercising happy path, safety block, approval accept/reject/timeout, compensation rollback, memory recall, degraded fan-out; use Dapr SDK test harnesses or clients to interact with state and workflows, and a Redis fixture for clean state.
-- [ ] (TEST, OBS) Write integration test asserting pubsub payload structure and Zipkin trace tags (including compensation traces) using Dapr SDK subscriptions or HTTP endpoints plus a mock subscriber.
-- [ ] (TEST, OPS) Create locust (or k6) scenario + helper script that drives workflow starts via Dapr REST API, raises approval events with the Workflow SDK client, and records latency/resource stats; include stages that force compensations to observe load impact.
+- [ ] (TEST) Add `pytest` suite covering happy path, safety abort, human reject, ops timeout, supply abort, saga duplicate events, pre-serve failures, and post-serve fan-out; include Redis fixture and Dapr SDK clients.
+- [ ] (TEST, OBS) Integrate tests asserting pubsub payloads (`workflow-metrics`, `taste-test.request`, `follow-up.schedule`) and Zipkin spans for saga + compensation paths.
+- [ ] (TEST, OPS) Create locust (or k6) scenario plus helper scripts to drive workflow starts, issue saga events, trigger pre-serve failures, and capture latency/resource stats across success and compensation flows.
 
 Docs & Runbooks
 ---------------
-- [ ] (DOC) Update `README.md` quickstart with Python + Dapr SDK commands, workflow start example, approval walkthrough, and how each workflow pattern is exercised.
-- [ ] (DOC, OPS) Document incident checklist (Redis down, Ollama offline, approval service lag, compensation loop) and recovery steps in `/docs/operations.md`, noting relevant Dapr CLI/SDK commands.
-- [ ] (DOC, TEST) Record latest load-test results + acceptance criteria in `docs/OPERATION_SNACKTOPUS_TESTPLAN.md` appendices, referencing SDK-based test tooling and pattern coverage.
+- [ ] (DOC) Update `README.md` quickstart with Python + Dapr SDK commands, saga event walkthrough, pre-serve checks, and post-serve fan-out story.
+- [ ] (DOC, OPS) Document incident checklist (Redis down, Ollama offline, human UI outage, ops veto loop, supply fail) and recovery steps in `/docs/operations.md`, referencing Dapr CLI/SDK commands.
+- [ ] (DOC, TEST) Record latest load-test results + acceptance criteria in `docs/OPERATION_SNACKTOPUS_TESTPLAN.md` appendices, mapping coverage to saga branches and post-event flows.
