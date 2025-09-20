@@ -25,7 +25,7 @@ Working with Python `uv`
 4. **Add runtime dependencies**
    - `uv add fastapi uvicorn[standard] dapr dapr-ext-workflow dapr-agents redis pydantic-settings python-dotenv`
 5. **Add developer tooling**
-   - `uv add --dev ruff pytest pytest-asyncio pytest-dapr typer rich`
+   - `uv add --dev ruff pytest pytest-asyncio typer rich locust`
 6. **Sync & lock**
    - `uv lock` (creates `uv.lock`)
    - `uv sync --shared` (materializes `.venv/` and ensures scripts see the same environment)
@@ -128,6 +128,26 @@ Planned `Makefile` commands (invoked via `uv run make <target>`):
 - `make run-agent`: `dapr run --app-id agent-shell --app-port 8000 -- uv run uvicorn src.agent_shell.main:app --reload`
 - `make run-workflow`: `dapr run --app-id workflow-host --app-port 7000 -- uv run python src/workflow_host/main.py`
 - `make test`: `uv run pytest`
+
+Dapr Components
+---------------
+- `components/statestore.yaml`: Redis state store with actor support for memory and saga snapshots.
+- `components/pubsub.yaml`: Redis pub/sub for workflow telemetry and fan-out topics.
+- `components/ollama.yaml`: OpenAI-compatible conversation connector targeting the local Ollama server.
+- `components/secretstore.yaml`: File-based secret store backing the Ollama connector (copy `components/secrets.json.sample` to `components/secrets.json` and update values).
+
+Multi-App Runner
+----------------
+`manifests/dapr.yaml` implements the [Dapr multi-app run template](https://docs.dapr.io/developing-applications/local-development/multi-app-dapr-run/multi-app-template/) so both services start with a single command. The file wires shared components via `resourcesPaths` and launches each process with `uv run`:
+
+```bash
+# from repository root
+cp components/secrets.json.sample components/secrets.json  # edit if needed
+cp .env.example .env                                       # optional
+dapr run -f manifests
+```
+
+The CLI keeps each app's logs under `~/.dapr/logs` and you can stop the bundle with `dapr stop -f manifests`. For solo debugging, use the single-app templates in `manifests/apps/` (for example, `dapr run -f manifests/apps/agent-shell.yaml`).
 
 Workflow Narrative
 ------------------

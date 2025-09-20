@@ -1,0 +1,9 @@
+version: 1
+common:
+  resourcesPaths: ../../components
+apps:
+  - appID: workflow-host
+    appDirPath: ../..
+    appPort: 7000
+    appProtocol: grpc
+    command: ["uv", "run", "python", "src/workflow_host/main.py"]

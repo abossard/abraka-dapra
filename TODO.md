@@ -9,11 +9,17 @@ Planning & Docs
 
 Environment & Components
 ------------------------
-- [ ] (PY, OPS) Standardize on Python 3.13.7 and manage deps with `uv`; initialize `pyproject.toml` using official Dapr Python SDKs (`dapr`, `dapr-ext-workflow`, `dapr-agents`) plus Ruff + Pytest, and add `Makefile` targets (`make dev`, `make test`, `make run-agent`, `make run-workflow`).
-  - [ ] Generate `uv` workspace (`uv init --name abraka_dapra`) and commit baseline `pyproject.toml`/`uv.lock`.
-  - [ ] Bake in scripts for `uv run make <target>` usage (see README "Make Targets & Runtime Flow").
-- [ ] (OPS) Create `components/` with Redis state store, Redis pubsub, Ollama conversation connector, optional local secret store; include scoped manifests for `agent-shell` + `workflow-host` and post-serve consumers.
-- [ ] (OPS) Author `.env.example` capturing ports, model name, saga timeouts, supply flags, and compensation toggles.
+- [x] (PY, OPS) Standardize on Python 3.13.7 and manage deps with `uv`; initialize `pyproject.toml` using official Dapr Python SDKs (`dapr`, `dapr-ext-workflow`, `dapr-agents`) plus Ruff + Pytest, and add `Makefile` targets (`make dev`, `make test`, `make run-agent`, `make run-workflow`).
+  - [x] Generate `uv` workspace (`uv init --name abraka_dapra`) and commit baseline `pyproject.toml`/`uv.lock`.
+  - [x] Bake in scripts for `uv run make <target>` usage (see README "Make Targets & Runtime Flow").
+  - [ ] Investigate availability of `pytest-dapr` (not discoverable on PyPI) or identify an alternative test harness for Dapr workflows.
+- [x] (OPS) Create `components/` with Redis state store, Redis pubsub, Ollama conversation connector, optional local secret store; include scoped manifests for `agent-shell` + `workflow-host` and post-serve consumers.
+  - [x] Ship Redis/Dapr manifests (`components/statestore.yaml`, `components/pubsub.yaml`).
+  - [x] Add Ollama connector + file secret store manifests with scoped access.
+  - [ ] Document production-ready secret management strategy beyond the local file store.
+- [x] (OPS) Publish multi-app run template for self-hosted dev (`manifests/dapr.yaml`) and single-app helpers under `manifests/apps/`.
+  - [ ] Extend template with config/per-app overrides (log destinations, placement host) as features solidify.
+- [x] (OPS) Author `.env.example` capturing ports, model name, saga timeouts, supply flags, and compensation toggles.
 
 Agent Service (`agent-shell`)
 ----------------------------

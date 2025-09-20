@@ -1,0 +1,14 @@
+{
+  "human_approval": {
+    "timeout_seconds": 900,
+    "fallback_verdict": "rejected_timeout"
+  },
+  "saga": {
+    "max_retries": 3,
+    "retry_backoff_seconds": 15
+  },
+  "telemetry": {
+    "metrics_topic": "workflow-metrics",
+    "zipkin_endpoint": "http://localhost:9411/api/v2/spans"
+  }
+}

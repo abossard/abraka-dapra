@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+components/secrets.json
+.dapr/

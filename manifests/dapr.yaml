@@ -1,0 +1,20 @@
+version: 1
+common:
+  resourcesPaths: ../components
+  env:
+    PYTHONUNBUFFERED: "1"
+apps:
+  - appID: agent-shell
+    appDirPath: ..
+    appPort: 8000
+    appProtocol: http
+    command: ["uv", "run", "uvicorn", "src.agent_shell.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    env:
+      SERVICE_NAME: agent-shell
+  - appID: workflow-host
+    appDirPath: ..
+    appPort: 7000
+    appProtocol: grpc
+    command: ["uv", "run", "python", "src/workflow_host/main.py"]
+    env:
+      SERVICE_NAME: workflow-host
