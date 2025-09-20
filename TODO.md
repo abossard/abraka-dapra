@@ -6,6 +6,7 @@ Legend: [ ] todo · [x] done · Tags: PY / AGENT / WF / API / STATE / OBS / TEST
 Planning & Docs
 ---------------
 - [x] (DOC) Capture `uv` workflow, repository layout, and system diagram in `README.md` to ground implementation kickoff.
+- [x] (DOC) Document Codex implementation guidance aligned with *Grokking Simplicity* and *A Philosophy of Software Design*.
 
 Environment & Components
 ------------------------

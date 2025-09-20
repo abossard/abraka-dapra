@@ -9,6 +9,13 @@ Mission Snapshot
 - Shared Redis + Ollama components managed through Dapr so each service focuses on prompts, safety, and saga logic.
 - Human-in-the-loop checkpoints to keep the "Operation Snacktopus" adventure playful but safe.
 
+Coding Principles
+------------------
+The codebase leans on two favourites—*Grokking Simplicity* and *A Philosophy of Software Design*—to stay understandable as the system grows. See `docs/CODEX_INSTRUCTIONS.md` for the full guidance, but in short:
+- Separate calculations from actions so workflow logic remains testable and side effects live near the edges.
+- Pursue deep modules with clear interfaces, hiding incidental complexity behind well-named helpers.
+- Model durable state transitions explicitly (memory, sagas, approvals) instead of ad-hoc dictionaries, and explain tricky choices inline when necessary.
+
 Working with Python `uv`
 ------------------------
 `uv` (by Astral) is a modern, ultra-fast Python project manager that combines dependency resolution, virtualenvs, and scripting. The plan for this repo:
