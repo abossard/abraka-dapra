@@ -154,7 +154,7 @@ cp .env.example .env                                       # optional
 dapr run -f manifests
 ```
 
-The CLI keeps each app's logs under `~/.dapr/logs` and you can stop the bundle with `dapr stop -f manifests`. For solo debugging, use the single-app templates in `manifests/apps/` (for example, `dapr run -f manifests/apps/agent-shell.yaml`).
+The CLI keeps each app's logs under `~/.dapr/logs` and you can stop the bundle with `dapr stop -f manifests`. For solo debugging, lean on `make run-agent` / `make run-workflow` (both use `dapr run` under the hood) so the manifest definitions stay in one place.
 
 Workflow Narrative
 ------------------

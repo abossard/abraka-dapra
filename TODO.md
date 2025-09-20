@@ -18,7 +18,7 @@ Environment & Components
   - [x] Ship Redis/Dapr manifests (`components/statestore.yaml`, `components/pubsub.yaml`).
   - [x] Add Ollama connector + file secret store manifests with scoped access.
   - [ ] Document production-ready secret management strategy beyond the local file store.
-- [x] (OPS) Publish multi-app run template for self-hosted dev (`manifests/dapr.yaml`) and single-app helpers under `manifests/apps/`.
+- [x] (OPS) Publish multi-app run template for self-hosted dev (`manifests/dapr.yaml`).
   - [ ] Extend template with config/per-app overrides (log destinations, placement host) as features solidify.
 - [x] (OPS) Author `.env.example` capturing ports, model name, saga timeouts, supply flags, and compensation toggles.
 
