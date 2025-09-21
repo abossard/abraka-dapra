@@ -1,6 +1,6 @@
 # Dapr Components
 
-This directory holds the resource definitions used by Operation Snacktopus. For quick local smoke tests, only `statestore.yaml` is active – it uses the in-memory state store so no Redis dependency is required.
+This directory holds the resource definitions used by Operation Snacktopus. The active `statestore.yaml` points at Redis, so make sure a Redis instance is available on `localhost:6379` before running the multi-app template.
 
 To enable additional integrations, remove the `.disabled` suffix and provide the backing service:
 

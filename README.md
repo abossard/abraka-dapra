@@ -138,10 +138,14 @@ Planned `Makefile` commands (invoked via `uv run make <target>`):
 
 Dapr Components
 ---------------
-- `components/statestore.yaml`: In-memory state store for quick local smoke tests (no external services required).
-- `components/ollama.yaml.disabled`: Sample conversation connector for a local Ollama instance; rename without `.disabled` and supply credentials to enable.
-- `components/pubsub.yaml.disabled`: Redis pub/sub definition for workflow telemetry and fan-out once Redis is available.
-- `components/secretstore.yaml.disabled`: File-based secret store backing the Ollama connector when enabled.
+- `components/statestore.yaml`: Redis-backed state store (actors enabled); ensure Redis is running locally (example: `docker run --rm -p 6379:6379 redis:7`).
+- `components/ollama.yaml`: Conversation connector targeting a local Ollama (OpenAI-compatible) server.
+   - Env precedence: if `OLLAMA_API_KEY` is set, its value is used; otherwise the component attempts `apiKeySecretRef` → `secrets.json` (`{"ollama": {"apiKey": "..."}}`).
+   - Local Ollama ignores the Authorization header, so you can leave the key blank for development.
+   - Change model by editing metadata `model` (e.g., `llama3:8b`); restart sidecar to apply.
+- `components/pubsub.yaml`: Redis pub/sub definition for workflow telemetry and fan-out.
+- `components/secretstore.yaml`: File-based secret store backing optional secrets (edit `components/secrets.json`).
+- `components/zipkin.yaml`: Zipkin trace exporter; ensure Zipkin running on `localhost:9411` or remove the component.
 
 Multi-App Runner
 ----------------
@@ -155,6 +159,28 @@ dapr run -f manifests
 ```
 
 The CLI keeps each app's logs under `~/.dapr/logs` and you can stop the bundle with `dapr stop -f manifests`. For solo debugging, lean on `make run-agent` / `make run-workflow` (both use `dapr run` under the hood) so the manifest definitions stay in one place.
+
+The template now mounts the Redis state store by default, so be sure Redis is listening on `localhost:6379` before running. To layer in pub/sub or the Ollama connector, rename the matching component files (drop the `.disabled` suffix), start the backing service, and update `.env`/`components/secrets.json` as needed.
+Ollama Activation Quickstart
+----------------------------
+1. Install & start Ollama (https://ollama.com) so it serves `http://localhost:11434`.
+2. Pull a model (example): `ollama pull deepseek-r1:8b`.
+3. (Optional) Set env var if you want a placeholder key:
+   ```bash
+   export OLLAMA_API_KEY=not-required-local
+   ```
+4. (Optional) Or set a secret instead: copy `components/secrets.json.sample` to `components/secrets.json` and adjust the value.
+5. Run both apps via manifest: `dapr run -f manifests` or individually with `make run-agent`.
+6. Verify component registration:
+   ```bash
+   curl -s http://localhost:3500/v1.0/metadata | grep -i ollama
+   ```
+7. Send a test chat (raw OpenAI style) directly to Ollama to confirm model is loaded:
+   ```bash
+   curl -s -H 'Content-Type: application/json' \
+        -d '{"model":"deepseek-r1:8b","messages":[{"role":"user","content":"hello"}]}' \
+        http://localhost:11434/v1/chat | jq '.'
+   ```
 
 Workflow Narrative
 ------------------

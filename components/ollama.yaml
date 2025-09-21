@@ -1,0 +1,19 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: ollama
+spec:
+  type: conversation.openai
+  version: v1
+  metadata:
+    - name: endpoint
+      value: http://localhost:11434/v1
+    - name: model
+      value: deepseek-r1:8b
+    - name: apiKey
+      value: "${OLLAMA_API_KEY}" # If unset, component may fallback to secret store or be ignored by local Ollama
+    - name: apiKeySecretRef
+      value: ollama:apiKey # maps to secrets.json -> { "ollama": { "apiKey": "..." } }
+scopes:
+  - agent-shell
+  - workflow-host
