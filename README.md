@@ -138,10 +138,10 @@ Planned `Makefile` commands (invoked via `uv run make <target>`):
 
 Dapr Components
 ---------------
-- `components/statestore.yaml`: Redis state store with actor support for memory and saga snapshots.
-- `components/pubsub.yaml`: Redis pub/sub for workflow telemetry and fan-out topics.
-- `components/ollama.yaml`: OpenAI-compatible conversation connector targeting the local Ollama server.
-- `components/secretstore.yaml`: File-based secret store backing the Ollama connector (copy `components/secrets.json.sample` to `components/secrets.json` and update values).
+- `components/statestore.yaml`: In-memory state store for quick local smoke tests (no external services required).
+- `components/ollama.yaml.disabled`: Sample conversation connector for a local Ollama instance; rename without `.disabled` and supply credentials to enable.
+- `components/pubsub.yaml.disabled`: Redis pub/sub definition for workflow telemetry and fan-out once Redis is available.
+- `components/secretstore.yaml.disabled`: File-based secret store backing the Ollama connector when enabled.
 
 Multi-App Runner
 ----------------

@@ -1,11 +1,11 @@
 # Dapr Components
 
-This directory contains the manifests that the Snacktopus services share when they run under Dapr:
+This directory holds the resource definitions used by Operation Snacktopus. For quick local smoke tests, only `statestore.yaml` is active – it uses the in-memory state store so no Redis dependency is required.
 
-- `statestore.yaml` – Redis state store (actors enabled) for session memory and saga ledger.
-- `pubsub.yaml` – Redis pub/sub feed for workflow metrics and event fan-out.
-- `ollama.yaml` – Conversation connector targeting the local Ollama instance via the OpenAI-compatible API.
-- `secretstore.yaml` – File-based secret store used to supply the Ollama API key and other local secrets.
-- `secrets.json.sample` – Example secret payload; copy to `components/secrets.json` and adjust credentials before running locally.
+To enable additional integrations, remove the `.disabled` suffix and provide the backing service:
 
-The manifests scope every component to the `agent-shell` and `workflow-host` apps. Update scopes if you introduce additional services.
+- `ollama.yaml.disabled` – OpenAI-compatible connector aimed at a local Ollama instance; requires `OPENAI_API_KEY` or the file secret store.
+- `pubsub.yaml.disabled` – Redis pub/sub configuration for workflow fan-out telemetry.
+- `secretstore.yaml.disabled` – File-based secret store that feeds the Ollama component.
+
+If you re-enable these manifests, ensure the corresponding infrastructure is running (Redis, Ollama) and update `manifests/dapr.yaml` environment variables as needed.
