@@ -1,8 +1,10 @@
 version: 1
 common:
-  resourcesPaths: ../components
+  resourcesPaths:
+    - ../components
   env:
     PYTHONUNBUFFERED: "1"
+    OPENAI_API_KEY: ollama
 apps:
   - appID: agent-shell
     appDirPath: ..
@@ -13,8 +15,6 @@ apps:
       SERVICE_NAME: agent-shell
   - appID: workflow-host
     appDirPath: ..
-    appPort: 7000
-    appProtocol: grpc
     command: ["uv", "run", "python", "src/workflow_host/main.py"]
     env:
       SERVICE_NAME: workflow-host

@@ -11,11 +11,7 @@ spec:
     - name: model
       value: deepseek-r1:8b
     - name: apiKey
-      secretKeyRef:
-        name: ollama
-        key: apiKey
+      value: ollama
 scopes:
   - agent-shell
   - workflow-host
-auth:
-  secretStore: localsecret
