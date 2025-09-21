@@ -1,3 +1,5 @@
+smoke:
+	uv run python scripts/smoke.py
 UV ?= uv
 DAPR ?= dapr
 

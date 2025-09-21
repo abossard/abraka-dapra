@@ -10,11 +10,18 @@ apps:
     appDirPath: ..
     appPort: 8000
     appProtocol: http
+    daprHTTPPort: 3500
+    daprGRPCPort: 60000
     command: ["uv", "run", "uvicorn", "src.agent_shell.main:app", "--host", "0.0.0.0", "--port", "8000"]
     env:
       SERVICE_NAME: agent-shell
+      AGENT_HTTP_PORT: "8000"
+      AGENT_SIDECAR_PORT: "3500"
   - appID: workflow-host
     appDirPath: ..
+    daprHTTPPort: 3601
+    daprGRPCPort: 60001
     command: ["uv", "run", "python", "src/workflow_host/main.py"]
     env:
       SERVICE_NAME: workflow-host
+      WORKFLOW_SIDECAR_PORT: "3601"
