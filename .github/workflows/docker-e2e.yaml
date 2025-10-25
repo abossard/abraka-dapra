@@ -1,0 +1,106 @@
+name: Docker E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'docker-compose.yml'
+      - 'Dockerfile'
+      - 'components/docker/**'
+      - 'config/**'
+      - 'tests/e2e_docker_test.py'
+      - '.github/workflows/docker-e2e.yaml'
+
+jobs:
+  docker-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker images
+        run: docker compose build
+
+      - name: Start services
+        run: |
+          docker compose up -d
+          echo "Waiting for services to be ready..."
+          sleep 30
+
+      - name: Check service health
+        run: |
+          docker compose ps
+          docker compose logs
+
+      - name: Wait for Agent Shell to be ready
+        run: |
+          max_attempts=30
+          attempt=0
+          while [ $attempt -lt $max_attempts ]; do
+            if curl -s http://localhost:8000/healthz > /dev/null 2>&1; then
+              echo "Agent Shell is ready!"
+              break
+            fi
+            attempt=$((attempt + 1))
+            echo "Attempt $attempt/$max_attempts - Agent Shell not ready yet, waiting..."
+            sleep 2
+          done
+          if [ $attempt -eq $max_attempts ]; then
+            echo "ERROR: Agent Shell did not become ready in time"
+            docker compose logs agent-shell
+            exit 1
+          fi
+
+      - name: Initialize Ollama (optional - may timeout)
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          # Try to pull model but don't fail the job if it times out
+          docker exec abraka-ollama ollama pull deepseek-r1:8b || true
+
+      - name: Install Python for E2E tests
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install test dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install requests
+
+      - name: Run E2E tests
+        run: python3 tests/e2e_docker_test.py
+
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          echo "=== Docker Compose Services ==="
+          docker compose ps
+          echo ""
+          echo "=== Agent Shell Logs ==="
+          docker compose logs agent-shell
+          echo ""
+          echo "=== Agent Shell Dapr Logs ==="
+          docker compose logs agent-shell-dapr
+          echo ""
+          echo "=== Workflow Host Logs ==="
+          docker compose logs workflow-host
+          echo ""
+          echo "=== Workflow Host Dapr Logs ==="
+          docker compose logs workflow-host-dapr
+          echo ""
+          echo "=== Redis Logs ==="
+          docker compose logs redis
+          echo ""
+          echo "=== Placement Logs ==="
+          docker compose logs placement
+
+      - name: Stop services
+        if: always()
+        run: docker compose down -v

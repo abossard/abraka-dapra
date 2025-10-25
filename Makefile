@@ -3,7 +3,7 @@ smoke:
 UV ?= uv
 DAPR ?= dapr
 
-.PHONY: dev fmt lint test run-agent run-workflow clean docker-build docker-up docker-down docker-logs docker-test docker-init-ollama
+.PHONY: dev fmt lint test run-agent run-workflow clean docker-build docker-up docker-down docker-logs docker-test docker-init-ollama docker-quick-start
 
 help:
 	@printf "Available targets:\n"
@@ -13,6 +13,7 @@ help:
 	@printf "  test              Execute pytest suite\n"
 	@printf "  run-agent         Launch FastAPI agent-shell via Dapr\n"
 	@printf "  run-workflow      Launch workflow-host via Dapr\n"
+	@printf "  docker-quick-start Interactive setup script (recommended)\n"
 	@printf "  docker-build      Build Docker images\n"
 	@printf "  docker-up         Start all services with Docker Compose\n"
 	@printf "  docker-down       Stop all services\n"
@@ -51,6 +52,9 @@ clean:
 	find . -name '*.pyc' -delete
 
 # Docker Compose targets
+docker-quick-start:
+	./scripts/quick-start-docker.sh
+
 docker-build:
 	docker compose build
 

@@ -11,7 +11,14 @@ Mission Snapshot
 
 Quick Start with Docker Compose
 --------------------------------
-The fastest way to get everything running is with Docker Compose:
+The fastest way to get everything running is with Docker Compose. Use the interactive quick-start script:
+
+```bash
+# One-command setup (interactive)
+make docker-quick-start
+```
+
+Or manually:
 
 ```bash
 # Build and start all services (Redis, Ollama, Dapr, agent-shell, workflow-host)

@@ -21,6 +21,30 @@ The Docker Compose setup includes:
 
 ## Quick Start
 
+### Interactive Quick Start (Recommended)
+
+Run the interactive setup script that will guide you through the entire process:
+
+```bash
+./scripts/quick-start-docker.sh
+```
+
+Or use the make target:
+
+```bash
+make docker-quick-start
+```
+
+This script will:
+1. Check prerequisites
+2. Build Docker images
+3. Start all services
+4. Wait for services to be ready
+5. Optionally initialize Ollama with the model
+6. Run end-to-end tests
+
+### Manual Setup
+
 ### 1. Build the Docker images
 
 ```bash
