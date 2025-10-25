@@ -1,0 +1,12 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: zipkin
+spec:
+  type: exporters.zipkin
+  version: v1
+  metadata:
+    - name: enabled
+      value: "true"
+    - name: endpointAddress
+      value: http://zipkin:9411/api/v2/spans

@@ -1,0 +1,17 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: ollama
+spec:
+  type: conversation.openai
+  version: v1
+  metadata:
+    - name: endpoint
+      value: http://ollama:11434/v1
+    - name: model
+      value: deepseek-r1:8b
+    - name: apiKey
+      value: "not-required-for-local-ollama"
+scopes:
+  - agent-shell
+  - workflow-host
