@@ -18,7 +18,7 @@ def wait_for_services() -> Generator[None, None, None]:
             response = requests.get("http://localhost:8000/healthz", timeout=2)
             if response.status_code == 200:
                 break
-        except:
+        except requests.exceptions.RequestException:
             pass
         time.sleep(2)
     

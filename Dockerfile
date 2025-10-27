@@ -4,7 +4,9 @@ FROM python:3.13-slim AS base
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && update-ca-certificates
 
 # Set working directory
 WORKDIR /app
@@ -14,7 +16,8 @@ COPY pyproject.toml uv.lock ./
 COPY src ./src
 
 # Install uv package manager
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+# Try the official installer first, fall back to pip if it fails
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh || pip install --no-cache-dir uv
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Install dependencies
