@@ -1,0 +1,67 @@
+# Git files
+.git
+.gitignore
+.github
+
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+.eggs
+.venv
+venv
+env
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Documentation
+docs
+*.md
+!README.md
+
+# Tests (not needed in runtime image)
+tests
+
+# CI/CD
+.github
+
+# Temporary files
+tmp
+.tmp
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Development files
+Makefile
+.env
+.env.*
+!.env.example
+
+# Docker files
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Configs
+configs
+prompts
+scripts
+
+# Secrets
+secrets
+components/secrets.json

@@ -9,6 +9,37 @@ Mission Snapshot
 - Shared Redis + Ollama components managed through Dapr so each service focuses on prompts, safety, and saga logic.
 - Human-in-the-loop checkpoints to keep the "Operation Snacktopus" adventure playful but safe.
 
+Quick Start with Docker Compose
+--------------------------------
+The fastest way to get everything running is with Docker Compose. Use the interactive quick-start script:
+
+```bash
+# One-command setup (interactive)
+make docker-quick-start
+```
+
+Or manually:
+
+```bash
+# Build and start all services (Redis, Ollama, Dapr, agent-shell, workflow-host)
+make docker-build
+make docker-up
+
+# Initialize Ollama with the LLM model (takes 5-10 minutes)
+make docker-init-ollama
+
+# Run end-to-end tests
+make docker-test
+
+# View logs
+make docker-logs
+
+# Stop everything
+make docker-down
+```
+
+See [Docker Setup Guide](docs/DOCKER_SETUP.md) for detailed documentation.
+
 Coding Principles
 ------------------
 The codebase leans on two favourites—*Grokking Simplicity* and *A Philosophy of Software Design*—to stay understandable as the system grows. See `docs/CODEX_INSTRUCTIONS.md` for the full guidance, but in short:

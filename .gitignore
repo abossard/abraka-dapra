@@ -4,3 +4,15 @@ __pycache__/
 .env
 components/secrets.json
 .dapr/
+
+# Docker volumes and temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
